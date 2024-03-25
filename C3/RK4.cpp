@@ -26,7 +26,7 @@ int main(void){
   double dt = 0.1;     //paso de tiempo
   double t, x; 
 
-  for(t = 0, x = 1; t < 10;){
+  for(t = 0, x = 1; t < 10;){    //t = 0 y x = 1 son condiciones iniciales
     RK4(t,x,dt);
   }
 
