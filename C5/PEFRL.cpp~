@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cmath>
+#include "vector.h"
+
+using std::cout;
+using std::endl;
+
+//constantes del problema físico
+const double GM = 1.0;
+
+//constantes del algoritmo de integración
+const double xi = 0.1786178958448091;
+const double lambda = -0.2123418310626054;
+const double chi = -0.06626458266981849;
+const double Um2lambdau2 = (1-2*lambda)/2;
+const double Um2chiplusxi = 1-2*(chi+xi);
+
+//declaración de la clase
+class cuerpo;
+
+//declaración de la interfaz 
+private:
+  vector3D r,V,F; double m;
+public:
+  void Inicie(double x0,double y0,double z0,double Vx0,double Vy0,double Vz0,
+	      double m0);
+  void CalculeFuerza(void);
+  void Muevar(double dt, double coeficiente);
+  void Muevav(double dt, double coeficiente);
+  double Getx(void){return r.x();}; // Inline
+  double Gety(void){return r.y();}; // Inline
+};
+
+//implementación de las funciones
+void Cuerpo::Inicie(double x0,double y0,double z0,double Vx0,double Vy0,double Vz0,double m0){
+  r.load(x0,y0,z0); V.load(Vx0,Vy0,Vz0); m=m0;
+}
+void Cuerpo::CalculeFuerza(void){
+  F.load(0,-m*g,0);
+}
+void Cuerpo::Muevase(double dt){
+  //Algoritmo de Euler
+  r+=V*dt;  V+=F*(dt/m);
+}
