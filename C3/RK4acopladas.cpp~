@@ -1,0 +1,25 @@
+#include <iostream>
+#include <cmath>
+
+using std::cout;
+using std::endl;
+
+const double T = M_PI;       //periodo
+const double w = 2*M_PI/T;   //velocidad angular
+
+double f1(double t, double x1, double x2){ //primera ecuación
+  return -w*w*x2;
+}
+
+double f2(double t, double x1, double x2){ //segunda ecuación 
+  return x1;
+}
+
+
+
+//Para hacer RK4 en acopladas debo moverme al mismo tiempo  en ambas
+
+void RK4(double & t, double & x1, double & x2, double dt){
+
+  double dx11, dx21, dx31, dx41, dx12, dx22, dx32, dx42;
+}

@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+
+// Funciones para las derivadas del modelo SIR
+double dS_dt(double S, double I, double beta) {
+    return -beta * S * I;
+}
+
+double dI_dt(double S, double I, double beta, double gamma) {
+    return beta * S * I - gamma * I;
+}
+
+double dR_dt(double I, double gamma) {
+    return gamma * I;
+}
+
+// Método Runge-Kutta de cuarto orden para resolver el modelo SIR
+void RK4(double S0, double I0, double R0, double beta, double gamma, double t0, double tf, double h) {
+    int num_steps = (int)((tf - t0) / h) + 1;
+    std::vector<double> S(num_steps), I(num_steps), R(num_steps);
+    S[0] = S0;
+    I[0] = I0;
+    R[0] = R0;
+
+    for (int step = 1; step < num_steps; ++step) {
+        double current_S = S[step - 1];
+        double current_I = I[step - 1];
+        double current_R = R[step - 1];
+
+        // Calcular las pendientes
+        double k1_S = h * dS_dt(current_S, current_I, beta);
+        double k1_I = h * dI_dt(current_S, current_I, beta, gamma);
+        double k1_R = h * dR_dt(current_I, gamma);
+
+        double k2_S = h * dS_dt(current_S + 0.5 * k1_S, current_I + 0.5 * k1_I, beta);
+        double k2_I = h * dI_dt(current_S + 0.5 * k1_S, current_I + 0.5 * k1_I, beta, gamma);
+        double k2_R = h * dR_dt(current_I + 0.5 * k1_I, gamma);
+
+        double k3_S = h * dS_dt(current_S + 0.5 * k2_S, current_I + 0.5 * k2_I, beta);
+        double k3_I = h * dI_dt(current_S + 0.5 * k2_S, current_I + 0.5 * k2_I, beta, gamma);
+        double k3_R = h * dR_dt(current_I + 0.5 * k2_I, gamma);
+
+        double k4_S = h * dS_dt(current_S + k3_S, current_I + k3_I, beta);
+        double k4_I = h * dI_dt(current_S + k3_S, current_I + k3_I, beta, gamma);
+        double k4_R = h * dR_dt(current_I + k3_I, gamma);
+
+        // Actualizar valores
+        S[step] = current_S + (k1_S + 2*k2_S + 2*k3_S + k4_S) / 6;
+        I[step] = current_I + (k1_I + 2*k2_I + 2*k3_I + k4_I) / 6;
+        R[step] = current_R + (k1_R + 2*k2_R + 2*k3_R + k4_R) / 6;
+    }
+
+    // Este es un punto donde se podrían imprimir los resultados o manejarlos de otra forma.
+    // Por ahora, solo imprimiré el resultado final para ejemplo.
+    std::cout << "Final S: " << S.back() << ", I: " << I.back() << ", R: " << R.back() << std::endl;
+}
+
+int main() {
+    // Parámetros
+    double beta = 0.35;
+    double gamma = 0.08;
+
+    // Condiciones iniciales
+    double S0 = 0.99;
+    double I0 = 0.01;
+    double R0 = 0.0;
+
+    // Intervalo de tiempo y paso
+    double t0 = 0;
+    double tf = 500;
+    double h = 1;
+
+    // Ejecutar RK4
+    RK4(S0, I0, R0, beta, gamma, t0, tf, h);
+
+    return 0;
+}
