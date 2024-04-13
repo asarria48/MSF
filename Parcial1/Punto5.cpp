@@ -134,10 +134,10 @@ void InicieAnimacion(void){
 }
 void InicieCuadro(void){
     cout<<"plot 0,0 ";
-    cout<<" , "<<Lx/7<<"*t,0";        //pared de abajo
+    /*  cout<<" , "<<Lx/7<<"*t,0";        //pared de abajo
     cout<<" , "<<Lx/7<<"*t,"<<Ly;     //pared de arriba
     cout<<" , 0,"<<Ly/7<<"*t";        //pared de la izquierda
-    cout<<" , "<<Lx<<","<<Ly/7<<"*t"; //pared de la derecha
+    cout<<" , "<<Lx<<","<<Ly/7<<"*t"; //pared de la derecha*/
 }
 void TermineCuadro(void){
     cout<<endl;

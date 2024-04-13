@@ -103,7 +103,7 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & Grano1,Cuerpo & Grano2,
   vector3D r21=Grano2.r-Grano1.r; double d=r21.norm();
   double R1=Grano1.R,R2=Grano2.R;
   double s=(R1+R2)-d;
-  if(s>0){ //Si hay colisión
+  if(d>1e-10){ //Si hay colisión
 
     //Vectores unitarios
     vector3D n=r21*(1.0/d),t,k; t.load(n.y(),-n.x(),0); k.load(0,0,1);
@@ -131,8 +131,8 @@ void Colisionador::CalculeFuerzaEntre(Cuerpo & Grano1,Cuerpo & Grano2,
   }
   if(sold>=0 && s<0) xCundall=0;  
   sold=s;*/
-    Grano1.SumeFuerza(F_repulsiva,0);
-    Grano2.SumeFuerza(F_repulsiva*(-1),0);
+    Grano1.SumeFuerza(F_repulsiva*(-1),0);
+    Grano2.SumeFuerza(F_repulsiva,0);
 }
 }
 //----------- Funciones Globales -----------
@@ -141,8 +141,8 @@ void InicieAnimacion(void){
   //  cout<<"set terminal gif animate"<<endl; 
   //  cout<<"set output 'UnBalon.gif'"<<endl;
   cout<<"unset key"<<endl;
-  cout<<"set xrange[-10:"<<Lx+10<<"]"<<endl;
-  cout<<"set yrange[-10:"<<Ly+10<<"]"<<endl;
+  cout<<"set xrange[-110:"<<110<<"]"<<endl;
+  cout<<"set yrange[-110:"<<110<<"]"<<endl;
   cout<<"set size ratio -1"<<endl;
   cout<<"set parametric"<<endl;
   cout<<"set trange [0:7]"<<endl;
@@ -150,10 +150,10 @@ void InicieAnimacion(void){
 }
 void InicieCuadro(void){
     cout<<"plot 0,0 ";
-    cout<<" , "<<Lx/7<<"*t,0";        //pared de abajo
+    /*   cout<<" , "<<Lx/7<<"*t,0";        //pared de abajo
     cout<<" , "<<Lx/7<<"*t,"<<Ly;     //pared de arriba
     cout<<" , 0,"<<Ly/7<<"*t";        //pared de la izquierda
-    cout<<" , "<<Lx<<","<<Ly/7<<"*t"; //pared de la derecha
+    cout<<" , "<<Lx<<","<<Ly/7<<"*t"; //pared de la derecha*/
 }
 void TermineCuadro(void){
     cout<<endl;
@@ -175,9 +175,9 @@ int main(){
   //Variables auxiliares para las paredes
   double Rpared=100*Lx, Mpared=100*m0;
   //Variables auxiliares para correr la simulacion
-  int Ncuadros=10000; double t,tdibujo,dt=T/100,tmax=5*T,tcuadro=tmax/Ncuadros; 
+  int Ncuadros=10000000; double t,tdibujo,dt=T/1000,tmax=5*T,tcuadro=tmax/Ncuadros; 
   
-  //     InicieAnimacion();
+       InicieAnimacion();
   
   /*  //INICIO
   //Inicializar las paredes
@@ -203,11 +203,11 @@ int main(){
 
     if(tdibujo>tcuadro){
 
-        cout << t << " " << Grano[0].Getx() << endl;
+      //  cout << t << " " << Grano[0].Getx() << endl;
       
-      /*           InicieCuadro();
+                 InicieCuadro();
       for(i=0;i<N;i++) Grano[i].Dibujese();
-      TermineCuadro();*/
+      TermineCuadro();
       
       tdibujo=0;
     }
