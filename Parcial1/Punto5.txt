@@ -1,0 +1,1 @@
+En la gráfica, observamos un crecimiento lento de r_max para los valores más pequeños de Nparticulas, y un crecimiento más pronunciado de r_max para los valores más grandes de Nparticulas. No es una relación lineal, podría sugerir una ley de potencia o una función exponencial para los valores altos de N.

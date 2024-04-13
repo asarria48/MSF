@@ -1,0 +1,1 @@
+EL deltat para que la amplitud de la oscilación permanezca constante a lo largo de un tiempo t*T es aproximadamente T/100
