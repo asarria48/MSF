@@ -40,7 +40,7 @@ public:
   double feq(double rho, double Jx0, double Jy0, int i); 
   //Funciones de evolución temporal:
   void Start(double rho0, double Jx0, double Jy0);
-  void BB(void);
+  //  void BB(void);
   void Collision(void);
   void ImposeFields(int t);
   void Advection(void);
@@ -125,7 +125,7 @@ void LatticeBoltzman::Start(double rho0, double Jx0, double Jy0){
       }
 }
 
-void LatticeBoltzman::BB(void){
+/*void LatticeBoltzman::BB(void){
   int n0, n0_next;
 
     // Frontera izquierda: ix = 0
@@ -145,7 +145,7 @@ void LatticeBoltzman::BB(void){
             fnew[n0] = D * f[n0_next]; 
         }
     }
-}
+    }*/
 
 void LatticeBoltzman::Collision(void){
 //en este paso, f y fnew se actualizan para cada celda y cada dirección en función de las distribuciones actuales y la función de equilibrio
@@ -162,7 +162,7 @@ void LatticeBoltzman::Collision(void){
     }  
    }
   }
-  BB();
+  // BB();
 }
 
 void LatticeBoltzman::ImposeFields(int t){  
@@ -181,22 +181,32 @@ void LatticeBoltzman::ImposeFields(int t){
   }
  }
 
-void LatticeBoltzman::Advection(void){
+void LatticeBoltzman::Advection(void) {
   int ix, iy, i, n0, ixnext, iynext, n0next;
-  //Para cada celda
-   for(ix = 0; ix < Lx; ix++)
-    for(iy = 0; iy < Ly; iy++)
-      //En cada dirección
-      for(i = 0; i < Q; i++){
-        //Calculo la posición actual y la siguiente
-	//Con condiciones de frontera periodicas
-	ixnext = (ix+Vx[i]+Lx)%Lx; iynext = (iy+Vy[i]+Ly)%Ly; //por ejemplo, si la malla fuese de 10x10, y para i = 0, ixnext = ix porque no hay velocidad ni en x ni en y
-	n0 = n(ix,iy,i); n0next = n(ixnext,iynext,i);
-	//Hago la advección: paso de los fnew a los f
-	  f[n0next] = fnew[n0];  //para luego usar los actuales (f) para hacer los nuevos (fnew)
+  // Para cada celda
+  for(ix = 0; ix < Lx; ix++) {
+    for(iy = 0; iy < Ly; iy++) {
+      // En cada dirección
+      for(i = 0; i < Q; i++) {
+        n0 = n(ix, iy, i);
+	
+        if (ix == 0 || ix == Lx-1) {
+       
+          ixnext = (ix == 0) ? ix + 1 : ix - 1;  
+          iynext = (iy + Vy[i] + Ly) % Ly;      
+          n0next = n(ixnext, iynext, (i+2)%4);
+          fnew[n0] = D*f[n0next];  
+        } else {
+          // Advección normal en el resto del dominio
+          ixnext = (ix + Vx[i] + Lx) % Lx; 
+          iynext = (iy + Vy[i] + Ly) % Ly; 
+          n0next = n(ixnext, iynext, i);
+          f[n0next] = fnew[n0];
+        }
       }
-   }
-
+    }
+  }
+}
 void LatticeBoltzman::Print(const char * NameFile){
   ofstream MyFile(NameFile);  
   double rho0;
